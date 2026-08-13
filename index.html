@@ -18,5 +18,8 @@ const WEBHOOK_URL="https://hamedgholamzade.app.n8n.cloud/webhook-test/service-re
 form.onsubmit=async e=>{e.preventDefault();msg.style.display="block";
 if(WEBHOOK_URL.startsWith("PASTE_")){msg.textContent="فرم آماده است؛ فقط باید Webhook n8n به آن وصل شود.";return}
 msg.textContent="در حال ثبت درخواست...";
-try{const r=await fetch(WEBHOOK_URL,{method:"POST",body:new FormData(form)});const d=await r.json();if(!r.ok)throw Error();msg.innerHTML="درخواست شما ثبت شد.<br>کد پیگیری: <b>"+d.tracking_code+"</b><br><a href='"+d.tracking_url+"'>صفحه پیگیری</a>";form.reset()}catch(e){msg.textContent="خطا . دوباره تلاش کنید."}};
+try{const r=await fetch(WEBHOOK_URL,{method:"POST",body:new FormData(form)});const d=await r.json();if(!r.ok)throw Error();msg.innerHTML="درخواست شما ثبت شد.<br>کد پیگیری: <b>"+d.tracking_code+"</b><br><a href='"+d.tracking_url+"'>صفحه پیگیری</a>";form.reset()}catch(e){
+  msg.textContent="خطای واقعی: "+e.message;
+  console.error(e);
+}};
 </script></body></html>
