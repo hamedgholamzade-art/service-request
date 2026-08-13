@@ -1,40 +1,304 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ثبت درخواست</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ثبت درخواست خدمات</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Tahoma,Arial,sans-serif;
+    background:#f4f6f8;
+    color:#20242a;
+}
+
+.container{
+    max-width:650px;
+    margin:35px auto;
+    padding:15px;
+}
+
+.card{
+    background:#fff;
+    border-radius:22px;
+    padding:28px;
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
+}
+
+.header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo{
+    width:60px;
+    height:60px;
+    margin:auto;
+    border-radius:18px;
+    background:#18212b;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+}
+
+h1{
+    font-size:23px;
+    margin:15px 0 8px;
+}
+
+.subtitle{
+    color:#777;
+    font-size:14px;
+    line-height:1.9;
+}
+
+label{
+    display:block;
+    margin:17px 0 7px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    border:1px solid #dce1e6;
+    border-radius:11px;
+    padding:13px;
+    font-family:inherit;
+    font-size:14px;
+    background:#fff;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#18212b;
+}
+
+textarea{
+    min-height:120px;
+    resize:vertical;
+}
+
+button{
+    width:100%;
+    border:0;
+    border-radius:12px;
+    padding:14px;
+    margin-top:22px;
+    background:#18212b;
+    color:#fff;
+    font-family:inherit;
+    font-size:15px;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.92;
+}
+
+.note{
+    background:#f6f7f8;
+    border-radius:10px;
+    padding:12px;
+    margin-top:18px;
+    color:#666;
+    font-size:12px;
+    line-height:1.9;
+}
+
+.result{
+    display:none;
+    margin-top:20px;
+    padding:15px;
+    border-radius:12px;
+    background:#eef8f0;
+    line-height:2;
+}
+
+.footer{
+    text-align:center;
+    margin-top:18px;
+    color:#888;
+    font-size:11px;
+}
+</style>
 </head>
 
 <body>
 
-<h2>ثبت درخواست خدمات</h2>
+<div class="container">
 
-<form
-action="https://hamedgholamzade.app.n8n.cloud/webhook-test/service-request"
-method="POST"
+<div class="card">
+
+<div class="header">
+
+<div class="logo">✓</div>
+
+<h1>ثبت درخواست خدمات</h1>
+
+<div class="subtitle">
+درخواست خود را ثبت کنید.<br>
+پس از بررسی، با شما تماس گرفته خواهد شد.
+</div>
+
+</div>
+
+<form id="requestForm">
+
+<label>نام و نام خانوادگی</label>
+<input
+type="text"
+name="name"
+placeholder="مثلاً علی رضایی"
+required
 >
 
-<p>نام و نام خانوادگی</p>
-<input type="text" name="name" value="تست">
+<label>شماره موبایل</label>
+<input
+type="tel"
+name="mobile"
+placeholder="0912xxxxxxx"
+pattern="09[0-9]{9}"
+required
+>
 
-<p>شماره موبایل</p>
-<input type="text" name="mobile" value="09120000000">
+<label>شهر</label>
+<input
+type="text"
+name="city"
+value="بیرجند"
+required
+>
 
-<p>شهر</p>
-<input type="text" name="city" value="بیرجند">
+<label>نوع خدمت</label>
 
-<p>نوع خدمت</p>
-<input type="text" name="service" value="خدمات سامانه‌ای">
+<select name="service" required>
 
-<p>شرح درخواست</p>
-<textarea name="description">تست درخواست مشتری</textarea>
+<option value="">انتخاب کنید</option>
 
-<br><br>
+<option value="اداره کار">
+اداره کار
+</option>
 
-<button type="submit">ارسال درخواست</button>
+<option value="تأمین اجتماعی">
+تأمین اجتماعی
+</option>
+
+<option value="شهرداری">
+شهرداری
+</option>
+
+<option value="مالیات">
+مالیات
+</option>
+
+<option value="ثبت شرکت">
+ثبت شرکت
+</option>
+
+<option value="خدمات سامانه‌ای">
+خدمات سامانه‌ای
+</option>
+
+<option value="سایر">
+سایر
+</option>
+
+</select>
+
+<label>شرح درخواست</label>
+
+<textarea
+name="description"
+placeholder="لطفاً توضیح دهید چه کاری برای شما انجام شود..."
+required
+></textarea>
+
+<div class="note">
+اطلاعات شما پس از ثبت درخواست بررسی می‌شود و در صورت نیاز برای تکمیل مدارک با شما تماس خواهیم گرفت.
+</div>
+
+<button type="submit">
+ثبت درخواست
+</button>
 
 </form>
+
+<div id="result" class="result"></div>
+
+<div class="footer">
+سامانه ثبت درخواست خدمات
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const WEBHOOK_URL = "https://hamedgholamzade.app.n8n.cloud/webhook/service-request";
+
+const form = document.getElementById("requestForm");
+
+const result = document.getElementById("result");
+
+form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    result.style.display = "block";
+
+    result.innerHTML = "در حال ارسال درخواست...";
+
+    const formData = new FormData(form);
+
+    try{
+
+        const response = await fetch(
+            WEBHOOK_URL,
+            {
+                method:"POST",
+                body:formData
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error();
+        }
+
+        result.innerHTML =
+        "درخواست شما با موفقیت ثبت شد.<br>" +
+        "کد پیگیری شما: <b>" +
+        data.tracking_code +
+        "</b>";
+
+        form.reset();
+
+    }catch(error){
+
+        result.innerHTML =
+        "ثبت درخواست انجام نشد.<br>" +
+        "لطفاً دوباره تلاش کنید.";
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>
