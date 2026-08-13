@@ -1,188 +1,40 @@
 <!doctype html>
 <html lang="fa" dir="rtl">
-
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>ثبت درخواست خدمات</title>
-
-<style>
-
-body{
-    margin:0;
-    background:#f4f6f8;
-    font-family:Tahoma,Arial;
-}
-
-.box{
-    max-width:700px;
-    margin:25px auto;
-    background:#fff;
-    padding:25px;
-    border-radius:18px;
-    box-shadow:0 5px 25px #0001;
-}
-
-label{
-    display:block;
-    font-weight:bold;
-    margin:16px 0 7px;
-}
-
-input,
-select,
-textarea,
-button{
-    width:100%;
-    box-sizing:border-box;
-    padding:12px;
-    border:1px solid #ccd4dc;
-    border-radius:9px;
-    font:inherit;
-}
-
-textarea{
-    min-height:120px;
-}
-
-.files{
-    display:grid;
-    gap:9px;
-}
-
-button{
-    margin-top:18px;
-    background:#18212b;
-    color:#fff;
-    border:0;
-    cursor:pointer;
-}
-
-</style>
+<title>ثبت درخواست</title>
 </head>
 
 <body>
 
-<div class="box">
-
-<h1>ثبت درخواست خدمات</h1>
-
-<p>
-درخواست و مدارک خود را ارسال کنید.
-پس از بررسی، هزینه و مراحل انجام کار اعلام می‌شود.
-</p>
+<h2>ثبت درخواست خدمات</h2>
 
 <form
 action="https://hamedgholamzade.app.n8n.cloud/webhook-test/service-request"
 method="POST"
-enctype="multipart/form-data"
 >
 
-<label>نام و نام خانوادگی *</label>
-<input name="name" required>
+<p>نام و نام خانوادگی</p>
+<input type="text" name="name" value="تست">
 
-<label>شماره موبایل *</label>
-<input
-name="mobile"
-inputmode="tel"
-pattern="09[0-9]{9}"
-required
->
+<p>شماره موبایل</p>
+<input type="text" name="mobile" value="09120000000">
 
-<label>شهر *</label>
-<input
-name="city"
-value="بیرجند"
-required
->
+<p>شهر</p>
+<input type="text" name="city" value="بیرجند">
 
-<label>نوع خدمت *</label>
+<p>نوع خدمت</p>
+<input type="text" name="service" value="خدمات سامانه‌ای">
 
-<select name="service" required>
+<p>شرح درخواست</p>
+<textarea name="description">تست درخواست مشتری</textarea>
 
-<option value="">انتخاب کنید</option>
+<br><br>
 
-<option>اداره کار</option>
-
-<option>تأمین اجتماعی</option>
-
-<option>شهرداری</option>
-
-<option>مالیات</option>
-
-<option>ثبت شرکت</option>
-
-<option>خدمات سامانه‌ای</option>
-
-<option>سایر</option>
-
-</select>
-
-<label>شرح درخواست *</label>
-
-<textarea
-name="description"
-required
-></textarea>
-
-<label>
-مدارک، حداکثر ۵ فایل اختیاری
-</label>
-
-<div class="files">
-
-<input
-type="file"
-name="file1"
-accept=".pdf,.jpg,.jpeg,.png"
->
-
-<input
-type="file"
-name="file2"
-accept=".pdf,.jpg,.jpeg,.png"
->
-
-<input
-type="file"
-name="file3"
-accept=".pdf,.jpg,.jpeg,.png"
->
-
-<input
-type="file"
-name="file4"
-accept=".pdf,.jpg,.jpeg,.png"
->
-
-<input
-type="file"
-name="file5"
-accept=".pdf,.jpg,.jpeg,.png"
->
-
-</div>
-
-<label>
-
-<input
-type="checkbox"
-required
-style="width:auto"
->
-
-اطلاعات را تأیید می‌کنم.
-
-</label>
-
-<button type="submit">
-ثبت درخواست
-</button>
+<button type="submit">ارسال درخواست</button>
 
 </form>
-
-</div>
 
 </body>
 </html>
