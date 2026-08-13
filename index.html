@@ -1,25 +1,292 @@
 <!doctype html>
-<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ثبت درخواست خدمات</title><style>
-body{margin:0;background:#f4f6f8;font-family:Tahoma,Arial}.box{max-width:700px;margin:25px auto;background:#fff;padding:25px;border-radius:18px;box-shadow:0 5px 25px #0001}
-label{display:block;font-weight:bold;margin:16px 0 7px}input,select,textarea,button{width:100%;box-sizing:border-box;padding:12px;border:1px solid #ccd4dc;border-radius:9px;font:inherit}textarea{min-height:120px}.files{display:grid;gap:9px}button{margin-top:18px;background:#18212b;color:#fff;border:0;cursor:pointer}.msg{margin-top:18px;padding:14px;border-radius:10px;background:#eef7f0;line-height:2}
-</style></head><body><div class="box"><h1>ثبت درخواست خدمات</h1><p>درخواست و مدارک خود را ارسال کنید. پس از بررسی، هزینه و مراحل انجام کار اعلام می‌شود.</p>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>ثبت درخواست خدمات</title>
+
+<style>
+body{
+    margin:0;
+    background:#f4f6f8;
+    font-family:Tahoma,Arial;
+}
+
+.box{
+    max-width:700px;
+    margin:25px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:18px;
+    box-shadow:0 5px 25px #0001;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin:16px 0 7px;
+}
+
+input,
+select,
+textarea,
+button{
+    width:100%;
+    box-sizing:border-box;
+    padding:12px;
+    border:1px solid #ccd4dc;
+    border-radius:9px;
+    font:inherit;
+}
+
+textarea{
+    min-height:120px;
+}
+
+.files{
+    display:grid;
+    gap:9px;
+}
+
+button{
+    margin-top:18px;
+    background:#18212b;
+    color:#fff;
+    border:0;
+    cursor:pointer;
+}
+
+.msg{
+    margin-top:18px;
+    padding:14px;
+    border-radius:10px;
+    background:#eef7f0;
+    line-height:2;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>ثبت درخواست خدمات</h1>
+
+<p>
+درخواست و مدارک خود را ارسال کنید.
+پس از بررسی، هزینه و مراحل انجام کار اعلام می‌شود.
+</p>
+
 <form id="form">
-<label>نام و نام خانوادگی *</label><input name="name" required>
-<label>شماره موبایل *</label><input name="mobile" inputmode="tel" pattern="09[0-9]{9}" required>
-<label>شهر *</label><input name="city" value="بیرجند" required>
-<label>نوع خدمت *</label><select name="service" required><option value="">انتخاب کنید</option><option>اداره کار</option><option>تأمین اجتماعی</option><option>شهرداری</option><option>مالیات</option><option>ثبت شرکت</option><option>خدمات سامانه‌ای</option><option>سایر</option></select>
-<label>شرح درخواست *</label><textarea name="description" required></textarea>
-<label>مدارک، حداکثر ۵ فایل اختیاری</label><div class="files">
-<input type="file" name="file1" accept=".pdf,.jpg,.jpeg,.png"><input type="file" name="file2" accept=".pdf,.jpg,.jpeg,.png"><input type="file" name="file3" accept=".pdf,.jpg,.jpeg,.png"><input type="file" name="file4" accept=".pdf,.jpg,.jpeg,.png"><input type="file" name="file5" accept=".pdf,.jpg,.jpeg,.png"></div>
-<label><input type="checkbox" required style="width:auto"> اطلاعات را تأیید می‌کنم.</label><button>ثبت درخواست</button></form><div id="msg" class="msg" style="display:none"></div></div>
+
+<label>نام و نام خانوادگی *</label>
+<input name="name" required>
+
+<label>شماره موبایل *</label>
+<input
+    name="mobile"
+    inputmode="tel"
+    pattern="09[0-9]{9}"
+    required
+>
+
+<label>شهر *</label>
+<input
+    name="city"
+    value="بیرجند"
+    required
+>
+
+<label>نوع خدمت *</label>
+
+<select name="service" required>
+
+<option value="">انتخاب کنید</option>
+
+<option>اداره کار</option>
+
+<option>تأمین اجتماعی</option>
+
+<option>شهرداری</option>
+
+<option>مالیات</option>
+
+<option>ثبت شرکت</option>
+
+<option>خدمات سامانه‌ای</option>
+
+<option>سایر</option>
+
+</select>
+
+<label>شرح درخواست *</label>
+
+<textarea
+    name="description"
+    required
+></textarea>
+
+<label>
+مدارک، حداکثر ۵ فایل اختیاری
+</label>
+
+<div class="files">
+
+<input
+    type="file"
+    name="file1"
+    accept=".pdf,.jpg,.jpeg,.png"
+>
+
+<input
+    type="file"
+    name="file2"
+    accept=".pdf,.jpg,.jpeg,.png"
+>
+
+<input
+    type="file"
+    name="file3"
+    accept=".pdf,.jpg,.jpeg,.png"
+>
+
+<input
+    type="file"
+    name="file4"
+    accept=".pdf,.jpg,.jpeg,.png"
+>
+
+<input
+    type="file"
+    name="file5"
+    accept=".pdf,.jpg,.jpeg,.png"
+>
+
+</div>
+
+<label>
+<input
+    type="checkbox"
+    required
+    style="width:auto"
+>
+اطلاعات را تأیید می‌کنم.
+</label>
+
+<button type="submit">
+ثبت درخواست
+</button>
+
+</form>
+
+<div
+    id="msg"
+    class="msg"
+    style="display:none"
+></div>
+
+</div>
+
+
 <script>
-const WEBHOOK_URL="https://hamedgholamzade.app.n8n.cloud/webhook-test/service-request";
-form.onsubmit=async e=>{e.preventDefault();msg.style.display="block";
-if(WEBHOOK_URL.startsWith("PASTE_")){msg.textContent="فرم آماده است؛ فقط باید Webhook n8n به آن وصل شود.";return}
-msg.textContent="در حال ثبت درخواست...";
-try{const r=await fetch(WEBHOOK_URL,{method:"POST",body:new FormData(form)});const d=await r.json();if(!r.ok)throw Error();msg.innerHTML="درخواست شما ثبت شد.<br>کد پیگیری: <b>"+d.tracking_code+"</b><br><a href='"+d.tracking_url+"'>صفحه پیگیری</a>";form.reset()}catch(e){
-  msg.textContent="خطای واقعی: "+e.message;
-  console.error(e);
-}};
-</script></body></html>
+
+const form = document.getElementById("form");
+
+const msg = document.getElementById("msg");
+
+
+/*
+آدرس Webhook تستی n8n
+فعلاً همین آدرس را نگه می‌داریم.
+*/
+
+const WEBHOOK_URL =
+"https://hamedgholamzade.app.n8n.cloud/webhook-test/service-request";
+
+
+form.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    msg.style.display = "block";
+
+    msg.textContent = "در حال ثبت درخواست...";
+
+
+    try {
+
+        const formData = new FormData(form);
+
+
+        const response = await fetch(WEBHOOK_URL, {
+
+            method: "POST",
+
+            body: formData
+
+        });
+
+
+        const text = await response.text();
+
+
+        console.log(
+            "Webhook response:",
+            text
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " + response.status
+            );
+
+        }
+
+
+        let data = {};
+
+
+        try {
+
+            data = JSON.parse(text);
+
+        } catch {
+
+            data = {};
+
+        }
+
+
+        msg.innerHTML =
+            "درخواست شما با موفقیت ثبت شد.<br>" +
+            "کد پیگیری: <b>" +
+            (data.tracking_code || "دریافت شد") +
+            "</b>";
+
+
+        form.reset();
+
+
+    } catch (error) {
+
+        console.error(
+            "Webhook error:",
+            error
+        );
+
+
+        msg.textContent =
+            "خطا در ارسال درخواست. لطفاً دوباره تلاش کنید.";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
