@@ -1,105 +1,75 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-
-<head>
-<meta charset="UTF-8">
-<title>پنل مدیریت</title>
-
-<style>
-body{
-font-family:tahoma;
-background:#f4f6f8;
-padding:20px;
-}
-
-table{
-width:100%;
-background:white;
-border-collapse:collapse;
-}
-
-th,td{
-border:1px solid #ddd;
-padding:10px;
-text-align:center;
-}
-
-th{
-background:#eee;
-}
-</style>
-
-</head>
-
-<body>
-
-<h2>پنل مدیریت درخواست‌ها</h2>
-
-<table>
-
-<thead>
-<tr>
-<th>کد پیگیری</th>
-<th>نام</th>
-<th>موبایل</th>
-<th>خدمت</th>
-<th>وضعیت</th>
-<th>قیمت</th>
-</tr>
-</thead>
-
-<tbody id="list">
-
-</tbody>
-
-</table>
-
-
 <script>
 
 const API_URL =
-"https://hamedgholamzade.app.n8n.cloud/webhook/admin-list
-";
+"https://hamedgholamzade.app.n8n.cloud/webhook/admin-list";
 
 
 async function loadData(){
 
-let response =
-await fetch(API_URL);
+try {
 
-let data =
-await response.json();
-console.log(data);
+let response = await fetch(API_URL);
 
-let html="";
+let result = await response.json();
+
+console.log(result);
 
 
-data.forEach(item=>{
+// گرفتن اطلاعات از قسمت data
+let data = result.data || result;
 
-html += `
+
+let html = "";
+
+
+data.forEach(item => {
+
+
+html += 
 
 <tr>
 
-<td>${item.tracking_code || ""}</td>
+<td>${item["tracking_code"] || item["کد پیگیری"] || ""}</td>
 
-<td>${item.name || ""}</td>
+<td>${item["نام"] || ""}</td>
 
-<td>${item.mobile || ""}</td>
+<td>${item["موبایل"] || ""}</td>
 
-<td>${item.service || ""}</td>
+<td>${item["خدمت"] || ""}</td>
 
-<td>${item.status || ""}</td>
+<td>${item["وضعیت"] || ""}</td>
 
-<td>${item.price || ""}</td>
+<td>${item["قیمت"] || ""}</td>
+
 
 </tr>
 
-`;
+;
+
 
 });
 
 
-document.getElementById("list").innerHTML=html;
+document.getElementById("list").innerHTML = html;
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+document.getElementById("list").innerHTML =
+
+
+<tr>
+<td colspan="6">
+خطا در دریافت اطلاعات
+</td>
+</tr>
+;
+
+}
 
 
 }
@@ -107,8 +77,5 @@ document.getElementById("list").innerHTML=html;
 
 loadData();
 
+
 </script>
-
-
-</body>
-</html>
