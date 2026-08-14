@@ -4,11 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>پنل مدیریت درخواست‌ها</title>
-
 
 <style>
 
@@ -18,61 +16,41 @@ body{
     padding:20px;
 }
 
-
 .container{
-
     max-width:1200px;
     margin:auto;
     background:white;
     padding:25px;
     border-radius:15px;
     box-shadow:0 5px 20px #ddd;
-
 }
-
 
 h2{
-
-text-align:center;
-
+    text-align:center;
 }
-
 
 table{
-
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
-
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
 }
-
 
 th,td{
-
-border:1px solid #ddd;
-padding:12px;
-text-align:center;
-
+    border:1px solid #ddd;
+    padding:12px;
+    text-align:center;
 }
-
 
 th{
-
-background:#eeeeee;
-
+    background:#eeeeee;
 }
-
 
 .loading{
-
-text-align:center;
-padding:20px;
-
+    text-align:center;
+    padding:20px;
 }
 
-
 </style>
-
 
 </head>
 
@@ -82,7 +60,6 @@ padding:20px;
 
 <div class="container">
 
-
 <h2>
 پنل مدیریت درخواست‌ها
 </h2>
@@ -90,21 +67,15 @@ padding:20px;
 
 <table>
 
-
 <thead>
 
 <tr>
 
 <th>کد پیگیری</th>
-
 <th>نام</th>
-
 <th>موبایل</th>
-
 <th>خدمت</th>
-
 <th>وضعیت</th>
-
 <th>قیمت</th>
 
 </tr>
@@ -112,22 +83,15 @@ padding:20px;
 </thead>
 
 
-
 <tbody id="list">
 
-
 <tr>
-
 <td colspan="6">
-
 <div class="loading">
 در حال دریافت اطلاعات...
 </div>
-
 </td>
-
 </tr>
-
 
 </tbody>
 
@@ -166,7 +130,7 @@ console.log(result);
 
 
 
-let data = result.data || result;
+let data = result.data;
 
 
 
@@ -174,67 +138,73 @@ let html = "";
 
 
 
-data.forEach(item => {
+if(!data || data.length === 0){
 
+html = 
+
+<tr>
+
+<td colspan="6">
+
+اطلاعاتی موجود نیست
+
+</td>
+
+</tr>
+
+;
+
+}
+
+else{
+
+
+data.forEach((item)=>{
 
 
 html += 
 
-
 <tr>
 
-
 <td>
-
 ${item["tracking_code"] || item["کد پیگیری"] || ""}
-
 </td>
 
 
 <td>
-
 ${item["نام"] || ""}
-
 </td>
 
 
 <td>
-
 ${item["موبایل"] || ""}
-
 </td>
 
 
 <td>
-
 ${item["خدمت"] || ""}
-
 </td>
 
 
 <td>
-
 ${item["وضعیت"] || ""}
-
 </td>
 
 
 <td>
-
 ${item["قیمت"] || ""}
-
 </td>
-
 
 
 </tr>
 
-
 ;
 
 
-
 });
+
+
+}
 
 
 
@@ -245,7 +215,6 @@ document.getElementById("list").innerHTML = html;
 }
 
 catch(error){
-
 
 
 console.log(error);
@@ -270,7 +239,6 @@ document.getElementById("list").innerHTML =
 }
 
 
-
 }
 
 
@@ -278,8 +246,8 @@ document.getElementById("list").innerHTML =
 loadData();
 
 
-</script>
 
+</script>
 
 
 </body>
