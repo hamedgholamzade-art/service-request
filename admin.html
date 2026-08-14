@@ -130,7 +130,7 @@ console.log(result);
 
 
 
-let data = Array.isArray(result.data) ? result.data : result.data ? [result.data] : [];
+let data = Array.isArray(result) ? result : result.data || [];
 
 
 let html = "";
@@ -157,48 +157,27 @@ html = `
 
 else{
 
-
 data.forEach((item)=>{
 
-
-html += `
+html += 
 
 <tr>
 
-<td>
-${item["tracking_code"] || item["کد پیگیری"] || ""}
-</td>
+<td>${item.tracking_code || ""}</td>
 
+<td>${item.name || ""}</td>
 
-<td>
-${item["نام"] || ""}
-</td>
+<td>${item.mobile || ""}</td>
 
+<td>${item.service || ""}</td>
 
-<td>
-${item["موبایل"] || ""}
-</td>
+<td>${item.status || ""}</td>
 
-
-<td>
-${item["خدمت"] || ""}
-</td>
-
-
-<td>
-${item["وضعیت"] || ""}
-</td>
-
-
-<td>
-${item["قیمت"] || ""}
-</td>
-
+<td>${item.price || ""}</td>
 
 </tr>
 
-`;
-
+;
 
 });
 
