@@ -130,8 +130,7 @@ console.log(result);
 
 
 
-let data = result.data;
-
+let data = Array.isArray(result.data) ? result.data : result.data ? [result.data] : [];
 
 
 let html = "";
