@@ -396,10 +396,16 @@ body:JSON.stringify(data)
 })
 
 
-.then(response=>response.json())
+.then(response=>{
+    console.log("STATUS:", response.status);
+    return response.text();
+})
 
 
 .then(result=>{
+    console.log("RESPONSE:", result);
+    alert(result);
+})
 
 
 alert("اطلاعات با موفقیت ذخیره شد");
