@@ -4,66 +4,84 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>پنل مدیریت درخواست‌ها</title>
 
-
 <style>
 
 body{
-    font-family:tahoma;
-    background:#f5f5f5;
-    padding:20px;
+font-family:tahoma;
+background:#f4f6f8;
+padding:20px;
 }
-
 
 .container{
-
-    background:white;
-    max-width:1200px;
-    margin:auto;
-    padding:25px;
-    border-radius:12px;
-
+background:white;
+max-width:1400px;
+margin:auto;
+padding:20px;
+border-radius:12px;
 }
-
 
 h2{
-
-    text-align:center;
-
+text-align:center;
 }
-
 
 table{
-
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
-
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
 }
-
 
 th,td{
+border:1px solid #ccc;
+padding:8px;
+text-align:center;
+font-size:14px;
+}
 
-    border:1px solid #ccc;
-    padding:10px;
-    text-align:center;
+th{
+background:#eee;
+}
+
+button{
+padding:7px 15px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+background:#1976d2;
+color:white;
+}
+
+button:hover{
+opacity:.8;
+}
+
+
+#editBox{
+
+display:none;
+background:#f9f9f9;
+padding:20px;
+margin-top:20px;
+border-radius:10px;
+border:1px solid #ddd;
 
 }
 
 
-th{
+input,textarea,select{
 
-    background:#eeeeee;
+width:100%;
+padding:10px;
+margin:8px 0;
+font-family:tahoma;
 
 }
 
 
 </style>
-
 
 </head>
 
@@ -79,7 +97,6 @@ th{
 </h2>
 
 
-
 <table>
 
 
@@ -88,29 +105,25 @@ th{
 <tr>
 
 <th>کد پیگیری</th>
-
 <th>نام</th>
-
 <th>موبایل</th>
-
 <th>خدمت</th>
-
 <th>وضعیت</th>
-
 <th>قیمت</th>
+<th>پاسخ</th>
+<th>عملیات</th>
 
 </tr>
+
 
 </thead>
 
 
-
 <tbody id="table">
-
 
 <tr>
 
-<td colspan="6">
+<td colspan="8">
 
 در حال دریافت اطلاعات...
 
@@ -118,71 +131,101 @@ th{
 
 </tr>
 
-
 </tbody>
 
 
-
 </table>
+
+
+
+<div id="editBox">
+
+
+<h3>
+ویرایش درخواست
+</h3>
+
+
+<input type="hidden" id="row_number">
+
+
+<label>
+وضعیت
+</label>
+
+
+<select id="status">
+
+<option value="جدید">جدید</option>
+<option value="در حال بررسی">در حال بررسی</option>
+<option value="انجام شد">انجام شد</option>
+<option value="رد شد">رد شد</option>
+
+</select>
+
+
+
+<label>
+قیمت
+</label>
+
+
+<input id="price" type="text">
+
+
+
+<label>
+پاسخ مدیر
+</label>
+
+
+<textarea id="reply"></textarea>
+
+
+
+<button onclick="saveEdit()">
+
+ذخیره تغییرات
+
+</button>
 
 
 </div>
 
 
 
+</div>
+
 <script>
 
 
-const API_URL = "https://hamedgholamzade.app.n8n.cloud/webhook/admin-list";
+const LIST_API = "https://hamedgholamzade.app.n8n.cloud/webhook/admin-list";
+
+const UPDATE_API = "https://hamedgholamzade.app.n8n.cloud/webhook/admin-update";
 
 
 
-fetch(API_URL)
+let allData = [];
 
+
+
+// دریافت اطلاعات جدول
+
+fetch(LIST_API)
 
 .then(response => response.json())
-
 
 .then(result => {
 
 
-
-console.log(result);
-
-
-
-let rows = result;
-
+allData = result;
 
 
 let html = "";
 
 
 
-if(!rows || rows.length === 0){
-
-
-html = `
-
-<tr>
-
-<td colspan="6">
-
-اطلاعاتی موجود نیست
-
-</td>
-
-</tr>
-
-`;
-
-}
-
-
-else{
-
-
-rows.forEach(item => {
+result.forEach(item => {
 
 
 
@@ -191,44 +234,28 @@ html += `
 <tr>
 
 
-<td>
+<td>${item.tracking_code || ""}</td>
 
-${item.tracking_code || ""}
+<td>${item.name || ""}</td>
 
-</td>
+<td>${item.mobile || ""}</td>
 
+<td>${item.service || ""}</td>
 
-<td>
+<td>${item.status || ""}</td>
 
-${item.name || ""}
+<td>${item.price || ""}</td>
 
-</td>
-
-
-<td>
-
-${item.mobile || ""}
-
-</td>
+<td>${item.reply || ""}</td>
 
 
 <td>
 
-${item.service || ""}
+<button onclick='editRequest(${JSON.stringify(item)})'>
 
-</td>
+ویرایش
 
-
-<td>
-
-${item.status || ""}
-
-</td>
-
-
-<td>
-
-${item.price || ""}
+</button>
 
 </td>
 
@@ -239,10 +266,8 @@ ${item.price || ""}
 `;
 
 
+
 });
-
-
-}
 
 
 
@@ -253,18 +278,16 @@ document.getElementById("table").innerHTML = html;
 })
 
 
-.catch(error => {
+.catch(error=>{
 
 
-console.log(error);
+document.getElementById("table").innerHTML =
 
-
-
-document.getElementById("table").innerHTML = `
+`
 
 <tr>
 
-<td colspan="6">
+<td colspan="8">
 
 خطا در دریافت اطلاعات
 
@@ -275,8 +298,135 @@ document.getElementById("table").innerHTML = `
 `;
 
 
+console.log(error);
+
+
 });
 
+
+
+
+
+// باز کردن فرم ویرایش
+
+
+function editRequest(item){
+
+
+
+document.getElementById("editBox").style.display="block";
+
+
+
+document.getElementById("row_number").value=item.row_number;
+
+
+
+document.getElementById("status").value=item.status || "جدید";
+
+
+document.getElementById("price").value=item.price || "";
+
+
+document.getElementById("reply").value=item.reply || "";
+
+
+
+window.scrollTo(0,document.body.scrollHeight);
+
+
+
+}
+
+
+
+
+
+
+// ارسال تغییرات به n8n
+
+
+function saveEdit(){
+
+
+
+let data = {
+
+
+row_number: document.getElementById("row_number").value,
+
+
+status: document.getElementById("status").value,
+
+
+price: document.getElementById("price").value,
+
+
+reply: document.getElementById("reply").value,
+
+
+admin_note: "ویرایش از پنل مدیریت"
+
+
+
+};
+
+
+
+
+fetch(UPDATE_API,{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"Content-Type":"application/json"
+
+
+},
+
+
+body:JSON.stringify(data)
+
+
+
+})
+
+
+.then(response=>response.json())
+
+
+.then(result=>{
+
+
+alert("اطلاعات با موفقیت ذخیره شد");
+
+
+location.reload();
+
+
+
+})
+
+
+.catch(error=>{
+
+
+alert("خطا در ذخیره اطلاعات");
+
+
+console.log(error);
+
+
+
+});
+
+
+
+}
 
 
 </script>
@@ -286,3 +436,6 @@ document.getElementById("table").innerHTML = `
 </body>
 
 </html>
+
+
+    
