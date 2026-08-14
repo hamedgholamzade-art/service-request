@@ -344,98 +344,72 @@ window.scrollTo(0,document.body.scrollHeight);
 
 
 // ارسال تغییرات به n8n
-
-
 function saveEdit(){
-
 
 
 let data = {
 
+    row_number: document.getElementById("row_number").value,
 
-row_number: document.getElementById("row_number").value,
+    status: document.getElementById("status").value,
 
+    price: document.getElementById("price").value,
 
-status: document.getElementById("status").value,
+    reply: document.getElementById("reply").value,
 
-
-price: document.getElementById("price").value,
-
-
-reply: document.getElementById("reply").value,
-
-
-admin_note: "ویرایش از پنل مدیریت"
-
-
+    admin_note: "ویرایش از پنل مدیریت"
 
 };
 
 
 
+fetch(UPDATE_API, {
 
-fetch(UPDATE_API,{
+    method: "POST",
 
+    headers: {
 
-method:"POST",
+        "Content-Type": "application/json"
 
+    },
 
-headers:{
-
-
-"Content-Type":"application/json"
-
-
-},
-
-
-body:JSON.stringify(data)
-
-
+    body: JSON.stringify(data)
 
 })
 
 
-.then(response=>response.json())
+.then(response => {
 
+    if(!response.ok){
 
-.then(result=>{
+        throw new Error("HTTP Error: " + response.status);
 
+    }
 
-alert("اطلاعات با موفقیت ذخیره شد");
-
-
-location.reload();
-
-
+    return response.text();
 
 })
 
 
-.catch(error=>{
+.then(result => {
+
+    console.log("Server response:", result);
+
+    alert("اطلاعات با موفقیت ارسال شد");
+
+    location.reload();
+
+})
 
 
-alert("خطا در ذخیره اطلاعات");
+.catch(error => {
 
+    console.log("Save Error:", error);
 
-console.log(error);
-
-
+    alert("خطا در ذخیره اطلاعات: " + error.message);
 
 });
 
 
-
 }
-
-
-</script>
-
-
-
-</body>
-
-</html>
-
-
     
