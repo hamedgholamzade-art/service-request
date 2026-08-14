@@ -140,7 +140,7 @@ let html = "";
 
 if(!data || data.length === 0){
 
-html = 
+html = `
 
 <tr>
 
@@ -152,7 +152,7 @@ html =
 
 </tr>
 
-;
+`;
 
 }
 
@@ -162,7 +162,7 @@ else{
 data.forEach((item)=>{
 
 
-html += 
+html += `
 
 <tr>
 
@@ -198,7 +198,7 @@ ${item["قیمت"] || ""}
 
 </tr>
 
-;
+`;
 
 
 });
@@ -221,7 +221,7 @@ console.log(error);
 
 
 
-document.getElementById("list").innerHTML = 
+document.getElementById("list").innerHTML = `
 
 <tr>
 
@@ -233,7 +233,7 @@ document.getElementById("list").innerHTML =
 
 </tr>
 
-;
+`;
 
 
 }
