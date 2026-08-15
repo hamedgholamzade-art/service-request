@@ -3,93 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>پیگیری درخواست</title>
+<title>پنل مدیریت درخواست‌ها</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
+  <div class="card">
+    <div class="header">
+      <h1>پنل مدیریت درخواست‌ها</h1>
+      <p>مشاهده و ویرایش درخواست‌های ثبت‌شده</p>
+    </div>
 
-<div class="ad">
-<h2>خدمات آنلاین حامد غلامزاده</h2>
-<div class="phone">شماره تماس: ۰۹۳۷۱۴۳۱۹۱۵</div>
-<p><strong>آدرس:</strong> بیرجند، خیابان پاسداران</p>
-<p>۱۰ سال سابقه در ارائه خدمات اداری، پیشخوان دولت و سامانه‌های تخصصی</p>
-</div>
+    <div id="loadStatus" class="status"></div>
 
-<div class="card">
-<div class="header">
-<h1>پیگیری درخواست</h1>
-<p>کد پیگیری خود را وارد کنید.</p>
-</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>کد پیگیری</th><th>نام</th><th>موبایل</th><th>خدمت</th>
+            <th>وضعیت</th><th>قیمت</th><th>پاسخ</th><th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="8">در حال دریافت اطلاعات...</td></tr>
+        </tbody>
+      </table>
+    </div>
 
-<div class="field">
-<label for="code">کد پیگیری</label>
-<input id="code" placeholder="مثلاً BRJ-12345678">
-</div>
+    <div id="editBox" class="edit-box">
+      <h3>ویرایش درخواست</h3>
+      <input type="hidden" id="row_number">
 
-<div class="actions">
-<button id="searchBtn" class="primary" type="button">پیگیری</button>
-</div>
+      <label for="status">وضعیت</label>
+      <select id="status">
+        <option value="جدید">جدید</option>
+        <option value="در حال بررسی">در حال بررسی</option>
+        <option value="انجام شد">انجام شد</option>
+        <option value="رد شد">رد شد</option>
+      </select>
 
-<div id="result" class="status"></div>
-</div>
+      <label for="price">قیمت</label>
+      <input id="price" type="text">
+
+      <label for="reply">پاسخ مدیر</label>
+      <textarea id="reply"></textarea>
+
+      <div class="actions">
+        <button class="primary" id="saveBtn" type="button">ذخیره تغییرات</button>
+        <button class="secondary" id="cancelBtn" type="button">انصراف</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="config.js"></script>
 <script>
-const codeInput=document.getElementById("code");
-const result=document.getElementById("result");
-const btn=document.getElementById("searchBtn");
-
-function show(text,ok){
- result.textContent=text||"";
- result.className="status "+(ok?"ok":"err");
-}
+const body = document.getElementById("tableBody");
+const editBox = document.getElementById("editBox");
+const loadStatus = document.getElementById("loadStatus");
+let selectedRow = null;
 
 function esc(v){
- return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
 }
 
-async function track(){
- const code=codeInput.value.trim();
- if(!code){show("کد پیگیری را وارد کنید.",false);return;}
- btn.disabled=true;
- show("در حال دریافت اطلاعات...",true);
+function showLoadError(msg){
+  loadStatus.textContent = msg;
+  loadStatus.className = "status err";
+}
 
- try{
-  const url=APP_CONFIG.trackApi+"?code="+encodeURIComponent(code);
-  const r=await fetch(url,{method:"GET",cache:"no-store",headers:{"Accept":"application/json"}});
-  const text=await r.text();
-  if(!r.ok) throw new Error("HTTP "+r.status);
+async function loadRequests(){
+  body.innerHTML = '<tr><td colspan="8">در حال دریافت اطلاعات...</td></tr>';
 
-  let data;
-  try{data=JSON.parse(text)}catch(_){throw new Error("پاسخ سرور JSON معتبر نیست.")}
+  try{
+    const response = await fetch(APP_CONFIG.listApi, { method:"GET", cache:"no-store" });
+    const text = await response.text();
 
-  const item=Array.isArray(data)?data[0]:data;
-  if(!item || (!item.tracking_code && !item.status)){
-    show("درخواستی با این کد پیدا نشد.",false);
-    return;
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    let result;
+    try { result = JSON.parse(text); }
+    catch(e){ throw new Error("پاسخ admin-list JSON معتبر نیست."); }
+
+    const rows = Array.isArray(result) ? result :
+                 Array.isArray(result.data) ? result.data :
+                 Array.isArray(result.items) ? result.items : [];
+
+    if(!rows.length){
+      body.innerHTML = '<tr><td colspan="8">درخواستی وجود ندارد.</td></tr>';
+      return;
+    }
+
+    body.innerHTML = rows.map((item, index) => `
+      <tr>
+        <td>${esc(item.tracking_code)}</td>
+        <td>${esc(item.name)}</td>
+        <td>${esc(item.mobile)}</td>
+        <td>${esc(item.service)}</td>
+        <td>${esc(item.status)}</td>
+        <td>${esc(item.price)}</td>
+        <td>${esc(item.reply)}</td>
+        <td><button class="primary editBtn" data-index="${index}">ویرایش</button></td>
+      </tr>
+    `).join("");
+
+    window.__rows = rows;
+  }catch(err){
+    body.innerHTML = '<tr><td colspan="8">خطا در دریافت اطلاعات.</td></tr>';
+    showLoadError(err.message);
   }
-
-  result.className="status ok";
-  result.innerHTML=
-    "<strong>کد پیگیری:</strong> "+esc(item.tracking_code||code)+"<br>"+
-    "<strong>وضعیت:</strong> "+esc(item.status||"")+"<br>"+
-    "<strong>قیمت:</strong> "+esc(item.price||"")+"<br>"+
-    "<strong>پاسخ مدیر:</strong> "+esc(item.reply||"");
- }catch(err){
-  show("خطا در پیگیری: "+err.message,false);
- }finally{
-  btn.disabled=false;
- }
 }
 
-btn.addEventListener("click",track);
-codeInput.addEventListener("keydown",e=>{if(e.key==="Enter")track()});
+body.addEventListener("click", e => {
+  const btn = e.target.closest(".editBtn");
+  if(!btn) return;
 
-const params=new URLSearchParams(location.search);
-const initialCode=params.get("code");
-if(initialCode){codeInput.value=initialCode;track();}
+  selectedRow = window.__rows[Number(btn.dataset.index)];
+  document.getElementById("row_number").value = selectedRow.tracking_code ?? "";
+  document.getElementById("status").value = selectedRow.status || "جدید";
+  document.getElementById("price").value = selectedRow.price || "";
+  document.getElementById("reply").value = selectedRow.reply || "";
+  editBox.classList.add("show");
+  editBox.scrollIntoView({behavior:"smooth"});
+});
+
+document.getElementById("cancelBtn").onclick = () => {
+  editBox.classList.remove("show");
+  selectedRow = null;
+};
+
+document.getElementById("saveBtn").onclick = async () => {
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+
+  try{
+    const data = {
+      tracking_code: document.getElementById("row_number").value,
+      status: document.getElementById("status").value,
+      price: document.getElementById("price").value,
+      reply: document.getElementById("reply").value,
+      admin_note: "ویرایش از پنل مدیریت"
+    };
+
+    if(!data.row_number) throw new Error("کد پیگیری این درخواست وجود ندارد.");
+
+    const response = await fetch(APP_CONFIG.updateApi, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Accept":"application/json"
+      },
+      body:JSON.stringify(data)
+    });
+
+    const text = await response.text();
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    // پاسخ خالی هم معتبر است؛ فقط اگر JSON بود بررسی/نمایش نمی‌دهیم.
+    alert("اطلاعات با موفقیت ذخیره شد.");
+    editBox.classList.remove("show");
+    await loadRequests();
+  }catch(err){
+    alert("خطا در ذخیره اطلاعات: " + err.message);
+  }finally{
+    saveBtn.disabled = false;
+  }
+};
+
+loadRequests();
 </script>
 </body>
 </html>
