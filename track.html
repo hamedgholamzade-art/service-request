@@ -8,27 +8,31 @@
 </head>
 <body>
 <div class="container">
-  <div class="ad">
-    <h2>خدمات آنلاین حامد غلامزاده</h2>
-    <div class="phone">شماره تماس: ۰۹۳۷۱۴۳۱۹۱۵</div>
-    <p><strong>آدرس:</strong> بیرجند، خیابان پاسداران</p>
-    <p>۱۰ سال سابقه در ارائه خدمات اداری، پیشخوان دولت و سامانه‌های تخصصی</p>
-  </div>
 
-  <div class="card">
-    <div class="header">
-      <h1>پیگیری درخواست</h1>
-      <p>کد پیگیری خود را وارد کنید.</p>
-    </div>
+<div class="ad">
+<h2>خدمات آنلاین حامد غلامزاده</h2>
+<div class="phone">شماره تماس: ۰۹۳۷۱۴۳۱۹۱۵</div>
+<p><strong>آدرس:</strong> بیرجند، خیابان پاسداران</p>
+<p>۱۰ سال سابقه در ارائه خدمات اداری، پیشخوان دولت و سامانه‌های تخصصی</p>
+</div>
 
-    <div class="field">
-      <label for="code">کد پیگیری</label>
-      <input id="code" placeholder="مثلاً BRJ-12345678">
-    </div>
+<div class="card">
+<div class="header">
+<h1>پیگیری درخواست</h1>
+<p>کد پیگیری خود را وارد کنید.</p>
+</div>
 
-    <button id="searchBtn" class="primary">پیگیری</button>
-    <div id="result" class="status"></div>
-  </div>
+<div class="field">
+<label for="code">کد پیگیری</label>
+<input id="code" placeholder="مثلاً BRJ-12345678">
+</div>
+
+<div class="actions">
+<button id="searchBtn" class="primary" type="button">پیگیری</button>
+</div>
+
+<div id="result" class="status"></div>
+</div>
 </div>
 
 <script src="config.js"></script>
@@ -37,45 +41,55 @@ const codeInput=document.getElementById("code");
 const result=document.getElementById("result");
 const btn=document.getElementById("searchBtn");
 
-function show(text,ok=false){
-  result.textContent=text;
-  result.className="status "+(ok?"ok":"err");
+function show(text,ok){
+ result.textContent=text||"";
+ result.className="status "+(ok?"ok":"err");
 }
 
 function esc(v){
-  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+ return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
 
 async function track(){
-  const code=codeInput.value.trim();
-  if(!code){show("کد پیگیری را وارد کنید.");return;}
-  btn.disabled=true;
-  try{
-    const url=APP_CONFIG.trackApi+"?code="+encodeURIComponent(code);
-    const r=await fetch(url,{method:"GET",cache:"no-store"});
-    const text=await r.text();
-    if(!r.ok) throw new Error("HTTP "+r.status);
-    let data;
-    try{data=JSON.parse(text);}catch(e){throw new Error("پاسخ سرور JSON معتبر نیست.");}
-    const item=Array.isArray(data)?data[0]:data;
-    if(!item || (!item.tracking_code && !item.status)){
-      show("درخواستی با این کد پیدا نشد."); return;
-    }
-    result.innerHTML=`
-      <strong>کد پیگیری:</strong> ${esc(item.tracking_code)}<br>
-      <strong>وضعیت:</strong> ${esc(item.status)}<br>
-      <strong>قیمت:</strong> ${esc(item.price)}<br>
-      <strong>پاسخ مدیر:</strong> ${esc(item.reply)}
-    `;
-    result.className="status ok";
-  }catch(e){show("خطا در پیگیری: "+e.message);}
-  finally{btn.disabled=false;}
+ const code=codeInput.value.trim();
+ if(!code){show("کد پیگیری را وارد کنید.",false);return;}
+ btn.disabled=true;
+ show("در حال دریافت اطلاعات...",true);
+
+ try{
+  const url=APP_CONFIG.trackApi+"?code="+encodeURIComponent(code);
+  const r=await fetch(url,{method:"GET",cache:"no-store",headers:{"Accept":"application/json"}});
+  const text=await r.text();
+  if(!r.ok) throw new Error("HTTP "+r.status);
+
+  let data;
+  try{data=JSON.parse(text)}catch(_){throw new Error("پاسخ سرور JSON معتبر نیست.")}
+
+  const item=Array.isArray(data)?data[0]:data;
+  if(!item || (!item.tracking_code && !item.status)){
+    show("درخواستی با این کد پیدا نشد.",false);
+    return;
+  }
+
+  result.className="status ok";
+  result.innerHTML=
+    "<strong>کد پیگیری:</strong> "+esc(item.tracking_code||code)+"<br>"+
+    "<strong>وضعیت:</strong> "+esc(item.status||"")+"<br>"+
+    "<strong>قیمت:</strong> "+esc(item.price||"")+"<br>"+
+    "<strong>پاسخ مدیر:</strong> "+esc(item.reply||"");
+ }catch(err){
+  show("خطا در پیگیری: "+err.message,false);
+ }finally{
+  btn.disabled=false;
+ }
 }
-btn.onclick=track;
-codeInput.addEventListener("keydown",e=>{if(e.key==="Enter")track();});
+
+btn.addEventListener("click",track);
+codeInput.addEventListener("keydown",e=>{if(e.key==="Enter")track()});
 
 const params=new URLSearchParams(location.search);
-if(params.get("code")){codeInput.value=params.get("code");track();}
+const initialCode=params.get("code");
+if(initialCode){codeInput.value=initialCode;track();}
 </script>
 </body>
 </html>
