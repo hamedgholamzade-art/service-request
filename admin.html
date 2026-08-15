@@ -4,82 +4,172 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>پنل مدیریت درخواست‌ها</title>
 
 <style>
 
+*{
+    box-sizing:border-box;
+}
+
 body{
-font-family:tahoma;
-background:#f4f6f8;
-padding:20px;
+    margin:0;
+    padding:20px;
+    font-family:tahoma,Arial,sans-serif;
+    background:#f4f6f8;
+    color:#222;
 }
 
 .container{
-background:white;
-max-width:1400px;
-margin:auto;
-padding:20px;
-border-radius:12px;
+    max-width:1400px;
+    margin:auto;
+    background:#fff;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
 h2{
-text-align:center;
+    text-align:center;
+    margin-top:0;
+}
+
+.message{
+    text-align:center;
+    padding:15px;
+    margin-top:15px;
+    border-radius:8px;
+    background:#f1f1f1;
+}
+
+.error{
+    background:#ffe5e5;
+    color:#b00020;
+}
+
+.success{
+    background:#e5f7e9;
+    color:#137333;
+}
+
+.table-wrapper{
+    width:100%;
+    overflow-x:auto;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
+    width:100%;
+    min-width:1000px;
+    border-collapse:collapse;
+    margin-top:20px;
 }
 
-th,td{
-border:1px solid #ccc;
-padding:8px;
-text-align:center;
-font-size:14px;
+th,
+td{
+    border:1px solid #ccc;
+    padding:9px;
+    text-align:center;
+    font-size:14px;
 }
 
 th{
-background:#eee;
+    background:#eeeeee;
+    white-space:nowrap;
 }
 
 button{
-padding:7px 15px;
-border:none;
-border-radius:5px;
-cursor:pointer;
-background:#1976d2;
-color:white;
+    padding:8px 15px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-family:tahoma;
+    color:white;
+}
+
+.edit-btn{
+    background:#1976d2;
+}
+
+.save-btn{
+    background:#188038;
+}
+
+.cancel-btn{
+    background:#777;
+    margin-right:8px;
 }
 
 button:hover{
-opacity:.8;
+    opacity:.85;
 }
-
 
 #editBox{
 
-display:none;
-background:#f9f9f9;
-padding:20px;
-margin-top:20px;
-border-radius:10px;
-border:1px solid #ddd;
+    display:none;
+
+    background:#f9f9f9;
+
+    padding:20px;
+
+    margin-top:25px;
+
+    border-radius:10px;
+
+    border:1px solid #ddd;
 
 }
 
+.form-row{
+    margin-bottom:12px;
+}
 
-input,textarea,select{
+label{
+    display:block;
+    margin-bottom:5px;
+    font-weight:bold;
+}
 
-width:100%;
-padding:10px;
-margin:8px 0;
-font-family:tahoma;
+input,
+textarea,
+select{
+
+    width:100%;
+
+    padding:10px;
+
+    border:1px solid #ccc;
+
+    border-radius:6px;
+
+    font-family:tahoma;
+
+    font-size:14px;
 
 }
 
+textarea{
+    min-height:100px;
+    resize:vertical;
+}
+
+.actions{
+    margin-top:15px;
+}
+
+.loading{
+    text-align:center;
+    padding:20px;
+}
+
+.small{
+    font-size:12px;
+    color:#666;
+    margin-top:8px;
+}
 
 </style>
 
@@ -91,30 +181,44 @@ font-family:tahoma;
 
 <div class="container">
 
-
 <h2>
 پنل مدیریت درخواست‌ها
 </h2>
 
 
-<table>
+<div id="message"
+     class="message loading">
 
+در حال دریافت اطلاعات...
+
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
 
 <thead>
 
 <tr>
 
 <th>کد پیگیری</th>
+
 <th>نام</th>
+
 <th>موبایل</th>
+
 <th>خدمت</th>
+
 <th>وضعیت</th>
+
 <th>قیمت</th>
+
 <th>پاسخ</th>
+
 <th>عملیات</th>
 
 </tr>
-
 
 </thead>
 
@@ -124,80 +228,128 @@ font-family:tahoma;
 <tr>
 
 <td colspan="8">
-
 در حال دریافت اطلاعات...
-
 </td>
 
 </tr>
 
 </tbody>
 
-
 </table>
+
+</div>
 
 
 
 <div id="editBox">
-
 
 <h3>
 ویرایش درخواست
 </h3>
 
 
-<input type="hidden" id="row_number">
+<input
+    type="hidden"
+    id="tracking_code"
+>
 
+
+<div class="form-row">
 
 <label>
 وضعیت
 </label>
 
-
 <select id="status">
 
-<option value="جدید">جدید</option>
-<option value="در حال بررسی">در حال بررسی</option>
-<option value="انجام شد">انجام شد</option>
-<option value="رد شد">رد شد</option>
+<option value="جدید">
+جدید
+</option>
+
+<option value="در حال بررسی">
+در حال بررسی
+</option>
+
+<option value="انجام شد">
+انجام شد
+</option>
+
+<option value="رد شد">
+رد شد
+</option>
 
 </select>
 
+</div>
 
+
+
+<div class="form-row">
 
 <label>
 قیمت
 </label>
 
+<input
+    id="price"
+    type="text"
+>
 
-<input id="price" type="text">
+</div>
 
 
+
+<div class="form-row">
 
 <label>
 پاسخ مدیر
 </label>
 
-
 <textarea id="reply"></textarea>
 
+</div>
 
 
-<button onclick="saveEdit()">
+
+<div class="actions">
+
+<button
+    class="save-btn"
+    onclick="saveEdit()">
 
 ذخیره تغییرات
 
 </button>
 
 
+<button
+    class="cancel-btn"
+    onclick="closeEdit()">
+
+انصراف
+
+</button>
+
 </div>
 
 
+<div class="small"
+     id="editingCode">
+</div>
 
 </div>
+
+
+</div>
+
+
 
 <script>
 
+
+/* ================================
+   آدرس‌های n8n
+================================ */
 
 const LIST_API =
 "https://hamedgholamzade.app.n8n.cloud/webhook/admin-list";
@@ -206,211 +358,515 @@ const UPDATE_API =
 "https://hamedgholamzade.app.n8n.cloud/webhook/admin-update";
 
 
+/* ================================
+   دریافت لیست درخواست‌ها
+================================ */
 
-let allData = [];
+async function loadRequests(){
 
+    const table =
+        document.getElementById("table");
 
+    const message =
+        document.getElementById("message");
 
-// دریافت اطلاعات جدول
 
-fetch(LIST_API)
+    try{
 
-.then(response => response.json())
+        message.className =
+            "message loading";
 
-.then(result => {
+        message.textContent =
+            "در حال دریافت اطلاعات...";
 
 
-allData = result;
+        const response =
+            await fetch(
+                LIST_API,
+                {
+                    method:"GET",
+                    headers:{
+                        "Accept":"application/json"
+                    }
+                }
+            );
 
 
-let html = "";
+        if(!response.ok){
 
+            throw new Error(
+                "خطای سرور: " +
+                response.status
+            );
 
+        }
 
-result.forEach(item => {
 
+        const result =
+            await response.json();
 
 
-html += `
+        console.log(
+            "ADMIN LIST RESPONSE:",
+            result
+        );
 
-<tr>
 
+        /*
+          n8n باید آرایه‌ای از درخواست‌ها
+          برگرداند.
+        */
 
-<td>${item.tracking_code || ""}</td>
+        let rows = result;
 
-<td>${item.name || ""}</td>
 
-<td>${item.mobile || ""}</td>
+        /*
+          اگر n8n پاسخ را داخل data
+          قرار داده باشد.
+        */
 
-<td>${item.service || ""}</td>
+        if(
+            result &&
+            !Array.isArray(result) &&
+            Array.isArray(result.data)
+        ){
 
-<td>${item.status || ""}</td>
+            rows = result.data;
 
-<td>${item.price || ""}</td>
+        }
 
-<td>${item.reply || ""}</td>
 
+        if(!Array.isArray(rows)){
 
-<td>
+            throw new Error(
+                "پاسخ admin-list آرایه نیست."
+            );
 
-<button onclick='editRequest(${JSON.stringify(item)})'>
+        }
 
-ویرایش
 
-</button>
+        if(rows.length === 0){
 
-</td>
+            table.innerHTML = `
+                <tr>
+                    <td colspan="8">
+                        هیچ درخواستی ثبت نشده است.
+                    </td>
+                </tr>
+            `;
 
+            message.className =
+                "message";
 
-</tr>
+            message.textContent =
+                "درخواستی وجود ندارد.";
 
+            return;
 
-`;
+        }
 
 
+        table.innerHTML = "";
 
-});
 
+        rows.forEach(function(item){
 
+            const tr =
+                document.createElement("tr");
 
-document.getElementById("table").innerHTML = html;
 
+            tr.innerHTML = `
 
+                <td>
+                    ${safe(item.tracking_code)}
+                </td>
 
-})
+                <td>
+                    ${safe(item.name)}
+                </td>
 
+                <td>
+                    ${safe(item.mobile)}
+                </td>
 
-.catch(error=>{
+                <td>
+                    ${safe(item.service)}
+                </td>
 
+                <td>
+                    ${safe(item.status)}
+                </td>
 
-document.getElementById("table").innerHTML =
+                <td>
+                    ${safe(item.price)}
+                </td>
 
-`
+                <td>
+                    ${safe(item.reply)}
+                </td>
 
-<tr>
+                <td>
 
-<td colspan="8">
+                    <button
+                        class="edit-btn"
+                        type="button">
 
-خطا در دریافت اطلاعات
+                        ویرایش
 
-</td>
+                    </button>
 
-</tr>
+                </td>
 
-`;
+            `;
 
 
-console.log(error);
+            const editButton =
+                tr.querySelector(".edit-btn");
 
 
-});
+            editButton.addEventListener(
+                "click",
+                function(){
 
+                    editRequest(item);
 
+                }
+            );
 
 
+            table.appendChild(tr);
 
-// باز کردن فرم ویرایش
+        });
 
 
-function editRequest(item){
+        message.className =
+            "message success";
 
-
-
-document.getElementById("editBox").style.display="block";
-
-
-
-document.getElementById("row_number").value=item.row_number;
-
-
-
-document.getElementById("status").value=item.status || "جدید";
-
-
-document.getElementById("price").value=item.price || "";
-
-
-document.getElementById("reply").value=item.reply || "";
-
-
-
-window.scrollTo(0,document.body.scrollHeight);
-
-
-
-}
-
-
-
-
-
-
-// ارسال تغییرات به n8n
-function saveEdit(){
-
-
-let data = {
-
-    row_number: document.getElementById("row_number").value,
-
-    status: document.getElementById("status").value,
-
-    price: document.getElementById("price").value,
-
-    reply: document.getElementById("reply").value,
-
-    admin_note: "ویرایش از پنل مدیریت"
-
-};
-
-
-
-fetch(UPDATE_API, {
-
-    method: "POST",
-
-    headers: {
-"Content-Type": "application/json",
-"Accept": "application/json"
-    },
-
-    body: JSON.stringify(data)
-
-})
-
-
-.then(response => {
-
-    if(!response.ok){
-
-        throw new Error("HTTP Error: " + response.status);
+        message.textContent =
+            "درخواست‌ها با موفقیت دریافت شدند.";
 
     }
 
-    return response.text();
+    catch(error){
 
-})
-
-
-.then(result => {
-
-    console.log("Server response:", result);
-
-    alert("اطلاعات با موفقیت ارسال شد");
-
-    location.reload();
-
-})
+        console.error(
+            "ADMIN LIST ERROR:",
+            error
+        );
 
 
-.catch(error => {
+        table.innerHTML = `
 
-    console.log("Save Error:", error);
+            <tr>
 
-    alert("خطا در ذخیره اطلاعات: " + error.message);
+                <td colspan="8">
 
-});
+                    خطا در دریافت اطلاعات
 
+                    <br>
+
+                    <small>
+                        ${safe(error.message)}
+                    </small>
+
+                </td>
+
+            </tr>
+
+        `;
+
+
+        message.className =
+            "message error";
+
+        message.textContent =
+            "خطا در دریافت اطلاعات.";
+
+    }
 
 }
-    
+
+
+/* ================================
+   نمایش فرم ویرایش
+================================ */
+
+function editRequest(item){
+
+    if(!item.tracking_code){
+
+        alert(
+            "کد پیگیری این درخواست وجود ندارد."
+        );
+
+        console.error(
+            "Missing tracking_code:",
+            item
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "tracking_code"
+    ).value =
+        item.tracking_code;
+
+
+    document.getElementById(
+        "status"
+    ).value =
+        item.status || "جدید";
+
+
+    document.getElementById(
+        "price"
+    ).value =
+        item.price || "";
+
+
+    document.getElementById(
+        "reply"
+    ).value =
+        item.reply || "";
+
+
+    document.getElementById(
+        "editingCode"
+    ).textContent =
+        "در حال ویرایش: " +
+        item.tracking_code;
+
+
+    document.getElementById(
+        "editBox"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "editBox"
+    ).scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+    });
+
+}
+
+
+/* ================================
+   بستن فرم
+================================ */
+
+function closeEdit(){
+
+    document.getElementById(
+        "editBox"
+    ).style.display =
+        "none";
+
+}
+
+
+/* ================================
+   ذخیره تغییرات
+================================ */
+
+async function saveEdit(){
+
+    const tracking_code =
+        document.getElementById(
+            "tracking_code"
+        ).value.trim();
+
+
+    const status =
+        document.getElementById(
+            "status"
+        ).value;
+
+
+    const price =
+        document.getElementById(
+            "price"
+        ).value;
+
+
+    const reply =
+        document.getElementById(
+            "reply"
+        ).value;
+
+
+    if(!tracking_code){
+
+        alert(
+            "کد پیگیری درخواست مشخص نیست."
+        );
+
+        return;
+
+    }
+
+
+    const data = {
+
+        tracking_code:
+            tracking_code,
+
+        status:
+            status,
+
+        price:
+            price,
+
+        reply:
+            reply,
+
+        admin_note:
+            "ویرایش از پنل مدیریت"
+
+    };
+
+
+    console.log(
+        "ADMIN UPDATE DATA:",
+        data
+    );
+
+
+    try{
+
+        const response =
+            await fetch(
+                UPDATE_API,
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json",
+
+                        "Accept":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify(data)
+
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "خطای سرور: " +
+                response.status
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        console.log(
+            "ADMIN UPDATE RESPONSE:",
+            result
+        );
+
+
+        if(
+            result &&
+            result.success === false
+        ){
+
+            throw new Error(
+                result.message ||
+                "ذخیره انجام نشد."
+            );
+
+        }
+
+
+        alert(
+            "اطلاعات با موفقیت ذخیره شد."
+        );
+
+
+        closeEdit();
+
+
+        await loadRequests();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "ADMIN UPDATE ERROR:",
+            error
+        );
+
+
+        alert(
+            "خطا در ذخیره اطلاعات:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ================================
+   جلوگیری از HTML Injection
+================================ */
+
+function safe(value){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* ================================
+   شروع برنامه
+================================ */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function(){
+
+        loadRequests();
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
