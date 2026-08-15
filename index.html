@@ -3,99 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ثبت درخواست خدمات آنلاین</title>
+<title>پنل مدیریت درخواست‌ها</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
-<div class="ad">
-<h2>خدمات آنلاین حامد غلامزاده</h2>
-<div class="phone">شماره تماس: ۰۹۳۷۱۴۳۱۹۱۵</div>
-<p><strong>آدرس:</strong> بیرجند، خیابان پاسداران</p>
-<p>۱۰ سال سابقه در ارائه خدمات اداری، پیشخوان دولت و سامانه‌های تخصصی</p>
-<p>ثبت درخواست شما به‌صورت آنلاین انجام می‌شود و پس از بررسی، پاسخ و وضعیت درخواست اعلام خواهد شد.</p>
+  <div class="card">
+    <div class="header">
+      <h1>پنل مدیریت درخواست‌ها</h1>
+      <p>مشاهده و ویرایش درخواست‌های ثبت‌شده</p>
+    </div>
+
+    <div id="loadStatus" class="status"></div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>کد پیگیری</th><th>نام</th><th>موبایل</th><th>خدمت</th>
+            <th>وضعیت</th><th>قیمت</th><th>پاسخ</th><th>عملیات</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="8">در حال دریافت اطلاعات...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="editBox" class="edit-box">
+      <h3>ویرایش درخواست</h3>
+      <input type="hidden" id="row_number">
+
+      <label for="status">وضعیت</label>
+      <select id="status">
+        <option value="جدید">جدید</option>
+        <option value="در حال بررسی">در حال بررسی</option>
+        <option value="انجام شد">انجام شد</option>
+        <option value="رد شد">رد شد</option>
+      </select>
+
+      <label for="price">قیمت</label>
+      <input id="price" type="text">
+
+      <label for="reply">پاسخ مدیر</label>
+      <textarea id="reply"></textarea>
+
+      <div class="actions">
+        <button class="primary" id="saveBtn" type="button">ذخیره تغییرات</button>
+        <button class="secondary" id="cancelBtn" type="button">انصراف</button>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="card">
-<div class="header">
-<h1>ثبت درخواست</h1>
-<p>لطفاً اطلاعات را با دقت وارد کنید.</p>
-</div>
-<form id="requestForm">
-<div class="grid">
-<div class="field"><label for="name">نام و نام خانوادگی *</label><input id="name" name="name" required></div>
-<div class="field"><label for="mobile">شماره موبایل *</label><input id="mobile" name="mobile" inputmode="tel" maxlength="11" placeholder="مثلاً 09371431915" required></div>
-<div class="field"><label for="city">شهر</label><input id="city" name="city" value="بیرجند"></div>
-<div class="field"><label for="service">خدمت موردنظر *</label><input id="service" name="service" required></div>
-<div class="field full"><label for="description">توضیحات درخواست</label><textarea id="description" name="description"></textarea></div>
-<div class="field full">
-<label>پیوست‌ها (اختیاری، حداکثر ۵ فایل)</label>
-<div class="files">
-<input id="files" type="file" name="files" multiple>
-<div class="note">حداکثر ۵ فایل. حجم مجاز هر فایل در نسخه فعلی ۱۰ مگابایت است.</div>
-<div id="fileList" class="file-list"></div>
-</div>
-</div>
-</div>
-<div class="actions">
-<button class="primary" id="submitBtn" type="submit">ثبت درخواست</button>
-<button class="secondary" type="reset">پاک کردن</button>
-</div>
-<div id="statusBox" class="status"></div>
-</form>
-</div>
-</div>
+
 <script src="config.js"></script>
 <script>
-const form=document.getElementById("requestForm");
-const filesInput=document.getElementById("files");
-const fileList=document.getElementById("fileList");
-const statusBox=document.getElementById("statusBox");
-const submitBtn=document.getElementById("submitBtn");
+const body = document.getElementById("tableBody");
+const editBox = document.getElementById("editBox");
+const loadStatus = document.getElementById("loadStatus");
+let selectedRow = null;
 
-filesInput.addEventListener("change",()=>{
-const files=[...filesInput.files];
-if(files.length>APP_CONFIG.maxFiles){
-filesInput.value=""; fileList.textContent="";
-showStatus("حداکثر ۵ فایل می‌توانید انتخاب کنید.",false); return;
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
 }
-const tooLarge=files.find(f=>f.size>APP_CONFIG.maxFileSizeMB*1024*1024);
-if(tooLarge){
-filesInput.value=""; fileList.textContent="";
-showStatus("حجم فایل «"+tooLarge.name+"» بیشتر از "+APP_CONFIG.maxFileSizeMB+" مگابایت است.",false); return;
+
+function showLoadError(msg){
+  loadStatus.textContent = msg;
+  loadStatus.className = "status err";
 }
-fileList.textContent=files.length?files.map(f=>f.name+" ("+(f.size/1024/1024).toFixed(2)+" MB)").join(" | "):"";
+
+async function loadRequests(){
+  body.innerHTML = '<tr><td colspan="8">در حال دریافت اطلاعات...</td></tr>';
+
+  try{
+    const response = await fetch(APP_CONFIG.listApi, { method:"GET", cache:"no-store" });
+    const text = await response.text();
+
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    let result;
+    try { result = JSON.parse(text); }
+    catch(e){ throw new Error("پاسخ admin-list JSON معتبر نیست."); }
+
+    const rows = Array.isArray(result) ? result :
+                 Array.isArray(result.data) ? result.data :
+                 Array.isArray(result.items) ? result.items : [];
+
+    if(!rows.length){
+      body.innerHTML = '<tr><td colspan="8">درخواستی وجود ندارد.</td></tr>';
+      return;
+    }
+
+    body.innerHTML = rows.map((item, index) => `
+      <tr>
+        <td>${esc(item.tracking_code)}</td>
+        <td>${esc(item.name)}</td>
+        <td>${esc(item.mobile)}</td>
+        <td>${esc(item.service)}</td>
+        <td>${esc(item.status)}</td>
+        <td>${esc(item.price)}</td>
+        <td>${esc(item.reply)}</td>
+        <td><button class="primary editBtn" data-index="${index}">ویرایش</button></td>
+      </tr>
+    `).join("");
+
+    window.__rows = rows;
+  }catch(err){
+    body.innerHTML = '<tr><td colspan="8">خطا در دریافت اطلاعات.</td></tr>';
+    showLoadError(err.message);
+  }
+}
+
+body.addEventListener("click", e => {
+  const btn = e.target.closest(".editBtn");
+  if(!btn) return;
+
+  selectedRow = window.__rows[Number(btn.dataset.index)];
+  document.getElementById("row_number").value = selectedRow.tracking_code ?? "";
+  document.getElementById("status").value = selectedRow.status || "جدید";
+  document.getElementById("price").value = selectedRow.price || "";
+  document.getElementById("reply").value = selectedRow.reply || "";
+  editBox.classList.add("show");
+  editBox.scrollIntoView({behavior:"smooth"});
 });
 
-function showStatus(message,ok){
-statusBox.textContent=message;
-statusBox.className="status "+(ok?"ok":"err");
-}
+document.getElementById("cancelBtn").onclick = () => {
+  editBox.classList.remove("show");
+  selectedRow = null;
+};
 
-form.addEventListener("submit",async e=>{
-e.preventDefault();
-statusBox.className="status";
-submitBtn.disabled=true;
-try{
-if(!APP_CONFIG.requestApi)throw new Error("آدرس وبهوک ثبت درخواست در config.js تنظیم نشده است.");
-const mobile=document.getElementById("mobile").value.trim();
-if(!/^09\d{9}$/.test(mobile))throw new Error("شماره موبایل باید ۱۱ رقم و با 09 شروع شود.");
-const files=[...filesInput.files];
-if(files.length>APP_CONFIG.maxFiles)throw new Error("حداکثر ۵ فایل مجاز است.");
-const data=new FormData(form);
-data.delete("files");
-files.forEach(file=>data.append("files",file));
-const response=await fetch(APP_CONFIG.requestApi,{method:"POST",body:data});
-const text=await response.text();
-if(!response.ok)throw new Error("HTTP "+response.status);
-let result=null;
-try{result=text?JSON.parse(text):null}catch(_){}
-const code=result?.tracking_code||result?.data?.tracking_code||"";
-showStatus(code?"درخواست با موفقیت ثبت شد. کد پیگیری: "+code:"درخواست با موفقیت ثبت شد.",true);
-form.reset();
-fileList.textContent="";
-}catch(err){showStatus("خطا در ثبت درخواست: "+err.message,false);}
-finally{submitBtn.disabled=false;}
-});
+document.getElementById("saveBtn").onclick = async () => {
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.disabled = true;
+
+  try{
+    const data = {
+      tracking_code: document.getElementById("row_number").value,
+      status: document.getElementById("status").value,
+      price: document.getElementById("price").value,
+      reply: document.getElementById("reply").value,
+      admin_note: "ویرایش از پنل مدیریت"
+    };
+
+    if(!data.row_number) throw new Error("کد پیگیری این درخواست وجود ندارد.");
+
+    const response = await fetch(APP_CONFIG.updateApi, {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Accept":"application/json"
+      },
+      body:JSON.stringify(data)
+    });
+
+    const text = await response.text();
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    // پاسخ خالی هم معتبر است؛ فقط اگر JSON بود بررسی/نمایش نمی‌دهیم.
+    alert("اطلاعات با موفقیت ذخیره شد.");
+    editBox.classList.remove("show");
+    await loadRequests();
+  }catch(err){
+    alert("خطا در ذخیره اطلاعات: " + err.message);
+  }finally{
+    saveBtn.disabled = false;
+  }
+};
+
+loadRequests();
 </script>
 </body>
 </html>
