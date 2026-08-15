@@ -2,139 +2,80 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>پیگیری درخواست</title>
-
-<style>
-body{
-    font-family:tahoma;
-    background:#f4f6f8;
-    padding:30px;
-}
-
-.box{
-    max-width:450px;
-    margin:auto;
-    background:white;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 5px 20px #ddd;
-}
-
-h2{
-    text-align:center;
-}
-
-input,button{
-    width:100%;
-    padding:12px;
-    margin-top:15px;
-    border-radius:10px;
-    border:1px solid #ddd;
-    font-size:15px;
-}
-
-button{
-    background:#18212b;
-    color:white;
-    cursor:pointer;
-}
-
-.result{
-    margin-top:20px;
-    line-height:2;
-}
-</style>
-
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+<div class="container">
+  <div class="ad">
+    <h2>خدمات آنلاین حامد غلامزاده</h2>
+    <div class="phone">شماره تماس: ۰۹۳۷۱۴۳۱۹۱۵</div>
+    <p><strong>آدرس:</strong> بیرجند، خیابان پاسداران</p>
+    <p>۱۰ سال سابقه در ارائه خدمات اداری، پیشخوان دولت و سامانه‌های تخصصی</p>
+  </div>
 
-<div class="box">
+  <div class="card">
+    <div class="header">
+      <h1>پیگیری درخواست</h1>
+      <p>کد پیگیری خود را وارد کنید.</p>
+    </div>
 
-<h2>
-پیگیری درخواست
-</h2>
+    <div class="field">
+      <label for="code">کد پیگیری</label>
+      <input id="code" placeholder="مثلاً BRJ-12345678">
+    </div>
 
-<input id="code" placeholder="کد پیگیری را وارد کنید">
-
-<button onclick="checkStatus()">
-بررسی وضعیت
-</button>
-
-<div class="result" id="result"></div>
-
+    <button id="searchBtn" class="primary">پیگیری</button>
+    <div id="result" class="status"></div>
+  </div>
 </div>
 
-
+<script src="config.js"></script>
 <script>
+const codeInput=document.getElementById("code");
+const result=document.getElementById("result");
+const btn=document.getElementById("searchBtn");
 
-const WEBHOOK_URL =
-"https://hamedgholamzade.app.n8n.cloud/webhook-test/track-status";
-
-async function checkStatus(){
-
-let code =
-document.getElementById("code").value;
-
-
-let result =
-document.getElementById("result");
-
-
-result.innerHTML="در حال بررسی...";
-
-
-try{
-
-let response =
-await fetch(
-WEBHOOK_URL+"?code="+code
-);
-
-
-let data =
-await response.json();
-
-
-result.innerHTML=
-`
-<b>کد پیگیری:</b>
-${data.tracking_code}
-<br>
-
-<b>وضعیت:</b>
-${data.status}
-
-<br>
-
-<b>نام:</b>
-${data.name}
-
-<br>
-
-<b>خدمت:</b>
-${data.service}
-
-<br>
-
-<b>توضیحات:</b>
-${data.reply || ""}
-`;
-
-}
-catch(e){
-
-result.innerHTML=
-"خطا در دریافت اطلاعات";
-
+function show(text,ok=false){
+  result.textContent=text;
+  result.className="status "+(ok?"ok":"err");
 }
 
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
 
+async function track(){
+  const code=codeInput.value.trim();
+  if(!code){show("کد پیگیری را وارد کنید.");return;}
+  btn.disabled=true;
+  try{
+    const url=APP_CONFIG.trackApi+"?code="+encodeURIComponent(code);
+    const r=await fetch(url,{method:"GET",cache:"no-store"});
+    const text=await r.text();
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    let data;
+    try{data=JSON.parse(text);}catch(e){throw new Error("پاسخ سرور JSON معتبر نیست.");}
+    const item=Array.isArray(data)?data[0]:data;
+    if(!item || (!item.tracking_code && !item.status)){
+      show("درخواستی با این کد پیدا نشد."); return;
+    }
+    result.innerHTML=`
+      <strong>کد پیگیری:</strong> ${esc(item.tracking_code)}<br>
+      <strong>وضعیت:</strong> ${esc(item.status)}<br>
+      <strong>قیمت:</strong> ${esc(item.price)}<br>
+      <strong>پاسخ مدیر:</strong> ${esc(item.reply)}
+    `;
+    result.className="status ok";
+  }catch(e){show("خطا در پیگیری: "+e.message);}
+  finally{btn.disabled=false;}
+}
+btn.onclick=track;
+codeInput.addEventListener("keydown",e=>{if(e.key==="Enter")track();});
+
+const params=new URLSearchParams(location.search);
+if(params.get("code")){codeInput.value=params.get("code");track();}
 </script>
-
-
 </body>
 </html>
