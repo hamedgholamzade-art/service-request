@@ -2,304 +2,100 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>ثبت درخواست خدمات</title>
-
-<style>
-*{
-    box-sizing:border-box;
-}
-
-body{
-    margin:0;
-    font-family:Tahoma,Arial,sans-serif;
-    background:#f4f6f8;
-    color:#20242a;
-}
-
-.container{
-    max-width:650px;
-    margin:35px auto;
-    padding:15px;
-}
-
-.card{
-    background:#fff;
-    border-radius:22px;
-    padding:28px;
-    box-shadow:0 10px 35px rgba(0,0,0,.08);
-}
-
-.header{
-    text-align:center;
-    margin-bottom:25px;
-}
-
-.logo{
-    width:60px;
-    height:60px;
-    margin:auto;
-    border-radius:18px;
-    background:#18212b;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:25px;
-}
-
-h1{
-    font-size:23px;
-    margin:15px 0 8px;
-}
-
-.subtitle{
-    color:#777;
-    font-size:14px;
-    line-height:1.9;
-}
-
-label{
-    display:block;
-    margin:17px 0 7px;
-    font-weight:bold;
-    font-size:14px;
-}
-
-input,
-select,
-textarea{
-    width:100%;
-    border:1px solid #dce1e6;
-    border-radius:11px;
-    padding:13px;
-    font-family:inherit;
-    font-size:14px;
-    background:#fff;
-    outline:none;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-    border-color:#18212b;
-}
-
-textarea{
-    min-height:120px;
-    resize:vertical;
-}
-
-button{
-    width:100%;
-    border:0;
-    border-radius:12px;
-    padding:14px;
-    margin-top:22px;
-    background:#18212b;
-    color:#fff;
-    font-family:inherit;
-    font-size:15px;
-    cursor:pointer;
-}
-
-button:hover{
-    opacity:.92;
-}
-
-.note{
-    background:#f6f7f8;
-    border-radius:10px;
-    padding:12px;
-    margin-top:18px;
-    color:#666;
-    font-size:12px;
-    line-height:1.9;
-}
-
-.result{
-    display:none;
-    margin-top:20px;
-    padding:15px;
-    border-radius:12px;
-    background:#eef8f0;
-    line-height:2;
-}
-
-.footer{
-    text-align:center;
-    margin-top:18px;
-    color:#888;
-    font-size:11px;
-}
-</style>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ثبت درخواست خدمات آنلاین</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
 <div class="container">
-
+<div class="ad">
+<h2>خدمات آنلاین حامد غلامزاده</h2>
+<div class="phone">شماره تماس: ۰۹۳۷۱۴۳۱۹۱۵</div>
+<p><strong>آدرس:</strong> بیرجند، خیابان پاسداران</p>
+<p>۱۰ سال سابقه در ارائه خدمات اداری، پیشخوان دولت و سامانه‌های تخصصی</p>
+<p>ثبت درخواست شما به‌صورت آنلاین انجام می‌شود و پس از بررسی، پاسخ و وضعیت درخواست اعلام خواهد شد.</p>
+</div>
 <div class="card">
-
 <div class="header">
-
-<div class="logo">✓</div>
-
-<h1>ثبت درخواست خدمات</h1>
-
-<div class="subtitle">
-درخواست خود را ثبت کنید.<br>
-پس از بررسی، با شما تماس گرفته خواهد شد.
+<h1>ثبت درخواست</h1>
+<p>لطفاً اطلاعات را با دقت وارد کنید.</p>
 </div>
-
-</div>
-
 <form id="requestForm">
-
-<label>نام و نام خانوادگی</label>
-<input
-type="text"
-name="name"
-placeholder="مثلاً علی رضایی"
-required
->
-
-<label>شماره موبایل</label>
-<input
-type="tel"
-name="mobile"
-placeholder="0912xxxxxxx"
-pattern="09[0-9]{9}"
-required
->
-
-<label>شهر</label>
-<input
-type="text"
-name="city"
-value="بیرجند"
-required
->
-
-<label>نوع خدمت</label>
-
-<select name="service" required>
-
-<option value="">انتخاب کنید</option>
-
-<option value="اداره کار">
-اداره کار
-</option>
-
-<option value="تأمین اجتماعی">
-تأمین اجتماعی
-</option>
-
-<option value="شهرداری">
-شهرداری
-</option>
-
-<option value="مالیات">
-مالیات
-</option>
-
-<option value="ثبت شرکت">
-ثبت شرکت
-</option>
-
-<option value="خدمات سامانه‌ای">
-خدمات سامانه‌ای
-</option>
-
-<option value="سایر">
-سایر
-</option>
-
-</select>
-
-<label>شرح درخواست</label>
-
-<textarea
-name="description"
-placeholder="لطفاً توضیح دهید چه کاری برای شما انجام شود..."
-required
-></textarea>
-
-<div class="note">
-اطلاعات شما پس از ثبت درخواست بررسی می‌شود و در صورت نیاز برای تکمیل مدارک با شما تماس خواهیم گرفت.
+<div class="grid">
+<div class="field"><label for="name">نام و نام خانوادگی *</label><input id="name" name="name" required></div>
+<div class="field"><label for="mobile">شماره موبایل *</label><input id="mobile" name="mobile" inputmode="tel" maxlength="11" placeholder="مثلاً 09371431915" required></div>
+<div class="field"><label for="city">شهر</label><input id="city" name="city" value="بیرجند"></div>
+<div class="field"><label for="service">خدمت موردنظر *</label><input id="service" name="service" required></div>
+<div class="field full"><label for="description">توضیحات درخواست</label><textarea id="description" name="description"></textarea></div>
+<div class="field full">
+<label>پیوست‌ها (اختیاری، حداکثر ۵ فایل)</label>
+<div class="files">
+<input id="files" type="file" name="files" multiple>
+<div class="note">حداکثر ۵ فایل. حجم مجاز هر فایل در نسخه فعلی ۱۰ مگابایت است.</div>
+<div id="fileList" class="file-list"></div>
 </div>
-
-<button type="submit">
-ثبت درخواست
-</button>
-
+</div>
+</div>
+<div class="actions">
+<button class="primary" id="submitBtn" type="submit">ثبت درخواست</button>
+<button class="secondary" type="reset">پاک کردن</button>
+</div>
+<div id="statusBox" class="status"></div>
 </form>
-
-<div id="result" class="result"></div>
-
-<div class="footer">
-سامانه ثبت درخواست خدمات
 </div>
-
 </div>
-
-</div>
-
+<script src="config.js"></script>
 <script>
+const form=document.getElementById("requestForm");
+const filesInput=document.getElementById("files");
+const fileList=document.getElementById("fileList");
+const statusBox=document.getElementById("statusBox");
+const submitBtn=document.getElementById("submitBtn");
 
-const WEBHOOK_URL = "https://hamedgholamzade.app.n8n.cloud/webhook-test/service-request
-";
-
-const form = document.getElementById("requestForm");
-
-const result = document.getElementById("result");
-
-form.addEventListener("submit", async function(e){
-
-    e.preventDefault();
-
-    result.style.display = "block";
-
-    result.innerHTML = "در حال ارسال درخواست...";
-
-    const formData = new FormData(form);
-
-    try{
-
-        const response = await fetch(
-            WEBHOOK_URL,
-            {
-                method:"POST",
-                body:formData
-            }
-        );
-
-        const data = await response.json();
-
-        if(!response.ok){
-            throw new Error();
-        }
-
-        result.innerHTML =
-        "درخواست شما با موفقیت ثبت شد.<br>" +
-        "کد پیگیری شما: <b>" +
-        data.tracking_code +
-        "</b>";
-
-        form.reset();
-
-    }catch(error){
-
-        result.innerHTML =
-        "ثبت درخواست انجام نشد.<br>" +
-        "لطفاً دوباره تلاش کنید.";
-
-    }
-
+filesInput.addEventListener("change",()=>{
+const files=[...filesInput.files];
+if(files.length>APP_CONFIG.maxFiles){
+filesInput.value=""; fileList.textContent="";
+showStatus("حداکثر ۵ فایل می‌توانید انتخاب کنید.",false); return;
+}
+const tooLarge=files.find(f=>f.size>APP_CONFIG.maxFileSizeMB*1024*1024);
+if(tooLarge){
+filesInput.value=""; fileList.textContent="";
+showStatus("حجم فایل «"+tooLarge.name+"» بیشتر از "+APP_CONFIG.maxFileSizeMB+" مگابایت است.",false); return;
+}
+fileList.textContent=files.length?files.map(f=>f.name+" ("+(f.size/1024/1024).toFixed(2)+" MB)").join(" | "):"";
 });
 
-</script>
+function showStatus(message,ok){
+statusBox.textContent=message;
+statusBox.className="status "+(ok?"ok":"err");
+}
 
+form.addEventListener("submit",async e=>{
+e.preventDefault();
+statusBox.className="status";
+submitBtn.disabled=true;
+try{
+if(!APP_CONFIG.requestApi)throw new Error("آدرس وبهوک ثبت درخواست در config.js تنظیم نشده است.");
+const mobile=document.getElementById("mobile").value.trim();
+if(!/^09\d{9}$/.test(mobile))throw new Error("شماره موبایل باید ۱۱ رقم و با 09 شروع شود.");
+const files=[...filesInput.files];
+if(files.length>APP_CONFIG.maxFiles)throw new Error("حداکثر ۵ فایل مجاز است.");
+const data=new FormData(form);
+data.delete("files");
+files.forEach(file=>data.append("files",file));
+const response=await fetch(APP_CONFIG.requestApi,{method:"POST",body:data});
+const text=await response.text();
+if(!response.ok)throw new Error("HTTP "+response.status);
+let result=null;
+try{result=text?JSON.parse(text):null}catch(_){}
+const code=result?.tracking_code||result?.data?.tracking_code||"";
+showStatus(code?"درخواست با موفقیت ثبت شد. کد پیگیری: "+code:"درخواست با موفقیت ثبت شد.",true);
+form.reset();
+fileList.textContent="";
+}catch(err){showStatus("خطا در ثبت درخواست: "+err.message,false);}
+finally{submitBtn.disabled=false;}
+});
+</script>
 </body>
 </html>
